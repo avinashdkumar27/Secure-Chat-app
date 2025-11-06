@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Chat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/glass.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Crypto Module -->
+  <script src="js/crypto-module.js"></script>
+</head>
+<body>
+  
+  <!-- LANDING PAGE -->
+  <div id="landingPage" class="page active">
+    <div class="landing-container">
+      <div class="lock-animation">
+        <i class="fas fa-lock"></i>
+      </div>
+      <h1 class="app-title">Secure Chat</h1>
+      <p class="tagline">Private. Encrypted. Real-Time.</p>
+      <div class="landing-buttons">
+        <button class="btn btn-primary" onclick="showPage('loginPage')">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+        <button class="btn btn-secondary" onclick="showPage('registerPage')">
+          <i class="fas fa-user-plus"></i> Register
+        </button>
+      </div>
+      <button class="btn btn-link" onclick="showPage('aboutPage')">
+        <i class="fas fa-info-circle"></i> Learn More
+      </button>
+    </div>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="page">
+    <div class="auth-container">
+      <div class="auth-header">
+        <i class="fas fa-shield-alt"></i>
+        <h2>Welcome Back</h2>
+        <p>Login to continue secure conversations</p>
+      </div>
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="loginUsername" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="loginPassword" placeholder="Password" required>
+        </div>
+        <div id="loginError" class="error-message"></div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+        <button type="button" class="btn btn-link" onclick="showPage('landingPage')">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+      </form>
+      <p class="auth-footer">
+        Don't have an account? <a href="#" onclick="showPage('registerPage')">Register here</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- REGISTER PAGE -->
+  <div id="registerPage" class="page">
+    <div class="auth-container">
+      <div class="auth-header">
+        <i class="fas fa-user-plus"></i>
+        <h2>Create Account</h2>
+        <p>Join secure encrypted messaging</p>
+      </div>
+      <form id="registerForm" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="regUsername" placeholder="Username" required minlength="3">
+        </div>
+        <div class="form-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="regEmail" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="regPassword" placeholder="Password" required minlength="6">
+        </div>
+        <div id="registerError" class="error-message"></div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+        <button type="button" class="btn btn-link" onclick="showPage('landingPage')">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+      </form>
+      <p class="auth-footer">
+        Already have an account? <a href="#" onclick="showPage('loginPage')">Login here</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- KEY GENERATION MODAL -->
+  <div id="keyModal" class="modal">
+    <div class="modal-content key-gen-modal">
+      <div class="modal-header">
+        <div class="key-gen-animation">
+          <i class="fas fa-key"></i>
+        </div>
+        <h2>Secure Keys Generated!</h2>
+        <p class="key-gen-subtitle">Your encryption keys are ready</p>
+      </div>
+      <div class="key-display">
+        <div class="key-item public-key">
+          <label><i class="fas fa-unlock-alt"></i> Public ID <span class="badge">SHAREABLE</span></label>
+          <div class="key-value">
+            <input type="text" id="displayPublicKey" readonly class="key-input">
+            <button onclick="copyKey('displayPublicKey')" class="btn-copy">
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+        </div>
+        <div class="key-item private-key">
+          <label><i class="fas fa-lock"></i> Private ID <span class="badge danger">KEEP SECRET</span></label>
+          <div class="key-value">
+            <input type="text" id="displayPrivateKey" readonly class="key-input">
+            <button onclick="copyKey('displayPrivateKey')" class="btn-copy">
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+          <button onclick="downloadPrivateKey()" class="btn btn-secondary" style="width: 100%; margin-top: 0.5rem;">
+            <i class="fas fa-download"></i> Download Private Key (.pem)
+          </button>
+        </div>
+      </div>
+      <div class="key-warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div>
+          <p><strong>SECURITY WARNING:</strong></p>
+          <ul style="font-size: 0.85rem; margin-top: 0.5rem; line-height: 1.6;">
+            <li>• Private key stays ONLY on your device</li>
+            <li>• Download and store it securely (not on server!)</li>
+            <li>• If lost, you cannot decrypt old messages</li>
+            <li>• Never share your private key with anyone</li>
+            <li>• Use HTTPS in production environment</li>
+          </ul>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block glow-btn" onclick="closeKeyModal()">
+        <i class="fas fa-rocket"></i> Continue to Chat
+      </button>
+    </div>
+  </div>
+
+  <!-- CHAT DASHBOARD -->
+  <div id="chatPage" class="page">
+    <div class="chat-layout">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <h3><i class="fas fa-comments"></i> Secure Chat</h3>
+          <button class="btn-icon" onclick="showPage('profilePage')">
+            <i class="fas fa-user-circle"></i>
+          </button>
+        </div>
+
+        <div class="user-keys">
+          <div class="key-info">
+            <label><i class="fas fa-unlock"></i> Your Public ID:</label>
+            <div class="key-value-small">
+              <span id="sidebarPublicKey"></span>
+              <button onclick="copyKey('sidebarPublicKey')" class="btn-copy-small">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+          </div>
+          <div class="key-info">
+            <label><i class="fas fa-lock"></i> Your Private ID:</label>
+            <div class="key-value-small">
+              <span id="sidebarPrivateKey"></span>
+              <button onclick="copyKey('sidebarPrivateKey')" class="btn-copy-small">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="new-chat-section">
+          <h4><i class="fas fa-plus-circle"></i> Start New Chat</h4>
+          <div class="form-group">
+            <input type="text" id="friendPublicKey" placeholder="Enter friend's Public ID">
+            <button onclick="startNewChat()" class="btn btn-primary btn-sm">
+              <i class="fas fa-comment"></i> Start
+            </button>
+          </div>
+        </div>
+
+        <div class="active-chats">
+          <h4><i class="fas fa-list"></i> Active Chats</h4>
+          <div id="chatList">
+            <p class="no-chats">No active chats yet</p>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <button class="btn btn-danger btn-sm" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat Area -->
+      <div class="chat-area">
+        <div id="noChatSelected" class="no-chat">
+          <i class="fas fa-comments"></i>
+          <h3>Select a chat to start messaging</h3>
+          <p>Your messages are end-to-end encrypted</p>
+        </div>
+
+        <div id="chatWindow" class="chat-window" style="display: none;">
+          <div class="chat-header">
+            <div class="chat-user-info">
+              <i class="fas fa-user-circle"></i>
+              <div>
+                <h4 id="chatUsername">User</h4>
+                <span id="chatUserKey" class="chat-user-key"></span>
+              </div>
+            </div>
+            <div class="chat-actions">
+              <button class="btn-icon" onclick="showEncryptionModal()">
+                <i class="fas fa-shield-alt"></i>
+              </button>
+              <button class="btn-icon" onclick="closeChat()">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="messages-container" id="messagesContainer">
+            <!-- Messages will be added here -->
+          </div>
+
+          <div class="typing-indicator" id="typingIndicator" style="display: none;">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span>User is typing...</span>
+          </div>
+
+          <div class="message-input-area">
+            <button class="btn-attach" onclick="toggleAttachMenu()" title="Attach">
+              <i class="fas fa-plus"></i>
+            </button>
+            <button class="btn-emoji" onclick="toggleEmojiPicker()" title="Emoji">
+              <i class="fas fa-smile"></i>
+            </button>
+            <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleMessageKeyPress(event)">
+            <button class="btn-send" onclick="sendMessage()">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          
+          <!-- Attach Menu -->
+          <div id="attachMenu" class="attach-menu" style="display: none;">
+            <div class="attach-option" onclick="handleAttachment('photos')">
+              <i class="fas fa-image"></i>
+              <span>Photos & videos</span>
+            </div>
+            <div class="attach-option" onclick="handleAttachment('camera')">
+              <i class="fas fa-camera"></i>
+              <span>Camera</span>
+            </div>
+            <div class="attach-option" onclick="handleAttachment('document')">
+              <i class="fas fa-file"></i>
+              <span>Document</span>
+            </div>
+            <div class="attach-option" onclick="handleAttachment('contact')">
+              <i class="fas fa-user"></i>
+              <span>Contact</span>
+            </div>
+            <div class="attach-option" onclick="handleAttachment('poll')">
+              <i class="fas fa-poll"></i>
+              <span>Poll</span>
+            </div>
+            <div class="attach-option" onclick="handleAttachment('event')">
+              <i class="fas fa-calendar"></i>
+              <span>Event</span>
+            </div>
+            <div class="attach-option" onclick="handleAttachment('drawing')">
+              <i class="fas fa-pen"></i>
+              <span>Drawing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE PAGE -->
+  <div id="profilePage" class="page">
+    <div class="profile-container">
+      <div class="profile-header">
+        <i class="fas fa-user-circle"></i>
+        <h2>Profile</h2>
+      </div>
+      <div class="profile-content">
+        <div class="profile-field">
+          <label><i class="fas fa-user"></i> Username:</label>
+          <p id="profileUsername"></p>
+        </div>
+        <div class="profile-field">
+          <label><i class="fas fa-envelope"></i> Email:</label>
+          <p id="profileEmail"></p>
+        </div>
+        <div class="profile-field">
+          <label><i class="fas fa-unlock"></i> Public ID:</label>
+          <div class="key-value">
+            <input type="text" id="profilePublicKey" readonly>
+            <button onclick="copyKey('profilePublicKey')" class="btn-copy">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+        </div>
+        <div class="profile-field">
+          <label><i class="fas fa-lock"></i> Private ID:</label>
+          <div class="key-value">
+            <input type="text" id="profilePrivateKey" readonly>
+            <button onclick="copyKey('profilePrivateKey')" class="btn-copy">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="showPage('chatPage')">
+        <i class="fas fa-arrow-left"></i> Back to Chat
+      </button>
+    </div>
+  </div>
+
+  <!-- ABOUT PAGE -->
+  <div id="aboutPage" class="page">
+    <div class="about-container">
+      <div class="about-header">
+        <i class="fas fa-info-circle"></i>
+        <h2>About Secure Chat App</h2>
+      </div>
+      <div class="about-content">
+        <div class="about-section">
+          <h3><i class="fas fa-shield-alt"></i> What is this?</h3>
+          <p>Secure Chat App uses <strong>Public-Private Key pairs</strong> to ensure messages are only readable by the intended user.</p>
+        </div>
+        <div class="about-section">
+          <h3><i class="fas fa-key"></i> How it works:</h3>
+          <ol>
+            <li><strong>Key Generation:</strong> When you register, you get a Public ID (shareable) and Private ID (secret).</li>
+            <li><strong>Encryption:</strong> When you send a message, it's encrypted with the receiver's Public ID.</li>
+            <li><strong>Decryption:</strong> Only the receiver can decrypt it using their Private ID.</li>
+            <li><strong>Security:</strong> Even the server cannot read your messages!</li>
+          </ol>
+        </div>
+        <div class="about-section">
+          <h3><i class="fas fa-lock"></i> Security Features:</h3>
+          <ul>
+            <li>✓ End-to-end encryption</li>
+            <li>✓ No message storage on server</li>
+            <li>✓ Your keys, your privacy</li>
+            <li>✓ Real-time encrypted communication</li>
+          </ul>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="showPage('landingPage')">
+        <i class="fas fa-home"></i> Back to Home
+      </button>
+    </div>
+  </div>
+
+  <!-- ENCRYPTION VISUALIZER MODAL -->
+  <div id="encryptionModal" class="modal">
+    <div class="modal-content encryption-modal">
+      <div class="modal-header">
+        <i class="fas fa-shield-alt"></i>
+        <h2>Encryption Visualizer</h2>
+        <button class="btn-close" onclick="closeEncryptionModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="encryption-steps">
+        <div class="encryption-step">
+          <div class="step-icon"><i class="fas fa-edit"></i></div>
+          <h4>1. You type a message</h4>
+          <p class="step-example">"Hello, how are you?"</p>
+        </div>
+        <div class="step-arrow"><i class="fas fa-arrow-down"></i></div>
+        <div class="encryption-step active">
+          <div class="step-icon"><i class="fas fa-lock"></i></div>
+          <h4>2. Encrypting with receiver's Public Key 🔒</h4>
+          <p class="step-example encrypted">x7j9k2mP4nQ8rT...</p>
+        </div>
+        <div class="step-arrow"><i class="fas fa-arrow-down"></i></div>
+        <div class="encryption-step">
+          <div class="step-icon"><i class="fas fa-exchange-alt"></i></div>
+          <h4>3. Sent over network (encrypted)</h4>
+          <p class="step-note">Server can't read this!</p>
+        </div>
+        <div class="step-arrow"><i class="fas fa-arrow-down"></i></div>
+        <div class="encryption-step">
+          <div class="step-icon"><i class="fas fa-unlock"></i></div>
+          <h4>4. Receiver decrypts with Private Key 🔑</h4>
+          <p class="step-example">"Hello, how are you?"</p>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="closeEncryptionModal()">
+        Got it!
+      </button>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

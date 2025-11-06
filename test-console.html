@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encryption Module - Test Console</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: #fff;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #00d9ff;
+      font-size: 2rem;
+    }
+    
+    .test-section {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .test-section h2 {
+      color: #7c3aed;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+    
+    button {
+      background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(124, 58, 237, 0.2));
+      color: #fff;
+      border: 1.5px solid rgba(0, 217, 255, 0.3);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 217, 255, 0.3);
+    }
+    
+    .output {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      min-height: 100px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    
+    .success {
+      color: #4ade80;
+    }
+    
+    .error {
+      color: #f87171;
+    }
+    
+    .info {
+      color: #00d9ff;
+    }
+    
+    textarea, input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-family: inherit;
+      margin: 0.5rem 0;
+      resize: vertical;
+    }
+    
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #00d9ff;
+      box-shadow: 0 0 10px rgba(0, 217, 255, 0.2);
+    }
+    
+    .key-display {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+      word-break: break-all;
+      font-size: 0.75rem;
+      color: #cbd5e1;
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .stat-box {
+      background: rgba(0, 217, 255, 0.1);
+      border: 1px solid rgba(0, 217, 255, 0.2);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    
+    .stat-box .label {
+      color: #94a3b8;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-box .value {
+      color: #00d9ff;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Encryption Module - Test Console</h1>
+    
+    <!-- Test 1: RSA Key Generation -->
+    <div class="test-section">
+      <h2>🔑 Test 1: RSA Key Generation</h2>
+      <button onclick="testRSAGeneration()">Generate RSA-2048 KeyPair</button>
+      <button onclick="clearOutput('output1')">Clear</button>
+      <div id="output1" class="output">Click button to generate RSA keypair...</div>
+    </div>
+    
+    <!-- Test 2: AES Encryption -->
+    <div class="test-section">
+      <h2>🔒 Test 2: AES-GCM Encryption/Decryption</h2>
+      <input type="text" id="aesPlaintext" placeholder="Enter message to encrypt with AES-GCM" value="Hello, AES-256-GCM!">
+      <button onclick="testAESEncryption()">Encrypt with AES</button>
+      <button onclick="testAESDecryption()">Decrypt</button>
+      <button onclick="clearOutput('output2')">Clear</button>
+      <div id="output2" class="output">Enter message and click encrypt...</div>
+    </div>
+    
+    <!-- Test 3: Hybrid E2E -->
+    <div class="test-section">
+      <h2>🌐 Test 3: Hybrid E2E Encryption (Alice → Bob)</h2>
+      <input type="text" id="e2ePlaintext" placeholder="Enter message for E2E encryption" value="Secret message from Alice to Bob!">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <button onclick="testE2ESetup()">1. Setup Alice & Bob</button>
+        <button onclick="testE2EEncrypt()">2. Alice Encrypts</button>
+        <button onclick="testE2EDecrypt()">3. Bob Decrypts</button>
+        <button onclick="clearOutput('output3')">Clear</button>
+      </div>
+      <div id="output3" class="output">Click "Setup" first to generate two users...</div>
+    </div>
+    
+    <!-- Test 4: Key Fingerprint -->
+    <div class="test-section">
+      <h2>🔍 Test 4: Public Key Fingerprint</h2>
+      <button onclick="testFingerprint()">Generate Fingerprint</button>
+      <button onclick="clearOutput('output4')">Clear</button>
+      <div id="output4" class="output">Fingerprint will appear here...</div>
+    </div>
+    
+    <!-- Test 5: Performance -->
+    <div class="test-section">
+      <h2>⚡ Test 5: Performance Benchmark</h2>
+      <button onclick="testPerformance()">Run Benchmark</button>
+      <button onclick="clearOutput('output5')">Clear</button>
+      <div id="output5" class="output">Click to run performance tests...</div>
+    </div>
+    
+    <!-- Stats -->
+    <div class="stats" id="statsContainer" style="display: none;">
+      <div class="stat-box">
+        <div class="label">Total Tests Run</div>
+        <div class="value" id="totalTests">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Successful</div>
+        <div class="value" id="successTests">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Failed</div>
+        <div class="value" id="failedTests">0</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Load Crypto Module -->
+  <script src="js/crypto-module.js"></script>
+  
+  <script>
+    let testData = {
+      alice: null,
+      bob: null,
+      aesKey: null,
+      aesIV: null,
+      aesCiphertext: null,
+      e2eEncrypted: null,
+      totalTests: 0,
+      successTests: 0,
+      failedTests: 0
+    };
+    
+    function log(outputId, message, type = 'info') {
+      const output = document.getElementById(outputId);
+      const timestamp = new Date().toLocaleTimeString();
+      const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+      output.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+      output.scrollTop = output.scrollHeight;
+    }
+    
+    function clearOutput(outputId) {
+      document.getElementById(outputId).innerHTML = '';
+    }
+    
+    function updateStats() {
+      document.getElementById('statsContainer').style.display = 'grid';
+      document.getElementById('totalTests').textContent = testData.totalTests;
+      document.getElementById('successTests').textContent = testData.successTests;
+      document.getElementById('failedTests').textContent = testData.failedTests;
+    }
+    
+    // Test 1: RSA Key Generation
+    async function testRSAGeneration() {
+      clearOutput('output1');
+      testData.totalTests++;
+      
+      try {
+        log('output1', '🔄 Generating RSA-OAEP 2048-bit keypair...');
+        const start = performance.now();
+        
+        const keyPair = await window.SecureChatCrypto.generateRSAKeyPair();
+        const publicPem = await window.SecureChatCrypto.exportPublicKeyToPem(keyPair.publicKey);
+        const privatePem = await window.SecureChatCrypto.exportPrivateKeyToPem(keyPair.privateKey);
+        const fingerprint = await window.SecureChatCrypto.getPublicKeyFingerprint(publicPem);
+        
+        const time = (performance.now() - start).toFixed(2);
+        
+        log('output1', `✅ RSA KeyPair generated in ${time}ms`, 'success');
+        log('output1', `📌 Fingerprint: ${fingerprint.substring(0, 50)}...`);
+        log('output1', '<br><strong>Public Key (PEM):</strong>');
+        log('output1', `<div class="key-display">${publicPem.substring(0, 200)}...</div>`);
+        log('output1', '<br><strong>Private Key (PEM):</strong>');
+        log('output1', `<div class="key-display">${privatePem.substring(0, 200)}...</div>`);
+        
+        testData.successTests++;
+      } catch (error) {
+        log('output1', `❌ Error: ${error.message}`, 'error');
+        testData.failedTests++;
+      }
+      
+      updateStats();
+    }
+    
+    // Test 2: AES Encryption
+    async function testAESEncryption() {
+      clearOutput('output2');
+      testData.totalTests++;
+      
+      try {
+        const plaintext = document.getElementById('aesPlaintext').value;
+        
+        log('output2', '🔄 Generating AES-256-GCM key...');
+        const start = performance.now();
+        
+        // Generate AES key
+        testData.aesKey = await crypto.subtle.generateKey(
+          { name: 'AES-GCM', length: 256 },
+          true,
+          ['encrypt', 'decrypt']
+        );
+        
+        // Generate IV
+        testData.aesIV = crypto.getRandomValues(new Uint8Array(12));
+        
+        // Encrypt
+        const encoder = new TextEncoder();
+        const data = encoder.encode(plaintext);
+        
+        testData.aesCiphertext = await crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv: testData.aesIV },
+          testData.aesKey,
+          data
+        );
+        
+        const time = (performance.now() - start).toFixed(2);
+        
+        log('output2', `✅ Message encrypted in ${time}ms`, 'success');
+        log('output2', `📝 Plaintext: "${plaintext}"`);
+        log('output2', `📏 Plaintext size: ${plaintext.length} bytes`);
+        log('output2', `🔒 Ciphertext size: ${testData.aesCiphertext.byteLength} bytes`);
+        log('output2', `🎲 IV: ${window.SecureChatCrypto.arrayBufferToBase64(testData.aesIV)}`);
+        log('output2', `🔐 Ciphertext (Base64): ${window.SecureChatCrypto.arrayBufferToBase64(testData.aesCiphertext)}`);
+        
+        testData.successTests++;
+      } catch (error) {
+        log('output2', `❌ Error: ${error.message}`, 'error');
+        testData.failedTests++;
+      }
+      
+      updateStats();
+    }
+    
+    async function testAESDecryption() {
+      testData.totalTests++;
+      
+      try {
+        if (!testData.aesKey || !testData.aesCiphertext) {
+          log('output2', '⚠️ Please encrypt first!', 'error');
+          return;
+        }
+        
+        log('output2', '<br>🔄 Decrypting with AES-GCM...');
+        
+        const plainBuffer = await crypto.subtle.decrypt(
+          { name: 'AES-GCM', iv: testData.aesIV },
+          testData.aesKey,
+          testData.aesCiphertext
+        );
+        
+        const decoder = new TextDecoder();
+        const decrypted = decoder.decode(plainBuffer);
+        
+        log('output2', `✅ Message decrypted successfully!`, 'success');
+        log('output2', `📝 Decrypted: "${decrypted}"`);
+        
+        testData.successTests++;
+      } catch (error) {
+        log('output2', `❌ Decryption failed: ${error.message}`, 'error');
+        testData.failedTests++;
+      }
+      
+      updateStats();
+    }
+    
+    // Test 3: E2E Hybrid
+    async function testE2ESetup() {
+      clearOutput('output3');
+      testData.totalTests++;
+      
+      try {
+        log('output3', '🔄 Setting up Alice and Bob...');
+        
+        // Generate Alice's keypair
+        const aliceKeyPair = await window.SecureChatCrypto.generateRSAKeyPair();
+        const alicePublic = await window.SecureChatCrypto.exportPublicKeyToPem(aliceKeyPair.publicKey);
+        const alicePrivate = await window.SecureChatCrypto.exportPrivateKeyToPem(aliceKeyPair.privateKey);
+        
+        // Generate Bob's keypair
+        const bobKeyPair = await window.SecureChatCrypto.generateRSAKeyPair();
+        const bobPublic = await window.SecureChatCrypto.exportPublicKeyToPem(bobKeyPair.publicKey);
+        const bobPrivate = await window.SecureChatCrypto.exportPrivateKeyToPem(bobKeyPair.privateKey);
+        
+        testData.alice = { publicKey: alicePublic, privateKey: alicePrivate };
+        testData.bob = { publicKey: bobPublic, privateKey: bobPrivate };
+        
+        log('output3', '✅ Alice and Bob created!', 'success');
+        log('output3', `👩 Alice Public Key: ${alicePublic.substring(27, 80)}...`);
+        log('output3', `👨 Bob Public Key: ${bobPublic.substring(27, 80)}...`);
+        log('output3', '<br>➡️ Now click "Alice Encrypts" to send message to Bob');
+        
+        testData.successTests++;
+      } catch (error) {
+        log('output3', `❌ Error: ${error.message}`, 'error');
+        testData.failedTests++;
+      }
+      
+      updateStats();
+    }
+    
+    async function testE2EEncrypt() {
+      testData.totalTests++;
+      
+      try {
+        if (!testData.alice || !testData.bob) {
+          log('output3', '⚠️ Please run setup first!', 'error');
+          return;
+        }
+        
+        const plaintext = document.getElementById('e2ePlaintext').value;
+        
+        log('output3', '<br>🔄 Alice encrypting message for Bob...');
+        const start = performance.now();
+        
+        testData.e2eEncrypted = await window.SecureChatCrypto.encryptForRecipient(
+          testData.bob.publicKey,
+          plaintext
+        );
+        
+        const time = (performance.now() - start).toFixed(2);
+        
+        log('output3', `✅ Message encrypted in ${time}ms`, 'success');
+        log('output3', `📝 Original: "${plaintext}"`);
+        log('output3', `🔐 Encrypted AES Key: ${testData.e2eEncrypted.encryptedKey.substring(0, 40)}...`);
+        log('output3', `🎲 IV: ${testData.e2eEncrypted.iv}`);
+        log('output3', `🔒 Ciphertext: ${testData.e2eEncrypted.ciphertext.substring(0, 40)}...`);
+        log('output3', '<br>➡️ Now click "Bob Decrypts" to decrypt the message');
+        
+        testData.successTests++;
+      } catch (error) {
+        log('output3', `❌ Encryption failed: ${error.message}`, 'error');
+        testData.failedTests++;
+      }
+      
+      updateStats();
+    }
+    
+    async function testE2EDecrypt() {
+      testData.totalTests++;
+      
+      try {
+        if (!testData.e2eEncrypted) {
+          log('output3', '⚠️ Please encrypt first!', 'error');
+          return;
+        }
+        
+        log('output3', '<br>🔄 Bob decrypting message...');
+        const start = performance.now();
+        
+        const decrypted = await window.SecureChatCrypto.decryptReceived(
+          testData.bob.privateKey,
+          testData.e2eEncrypted.encryptedKey,
+          testData.e2eEncrypted.iv,
+          testData.e2eEncrypted.ciphertext
+        );
+        
+        const time = (performance.now() - start).toFixed(2);
+        
+        log('output3', `✅ Message decrypted in ${time}ms`, 'success');
+        log('output3', `📝 Decrypted: "${decrypted}"`);
+        log('output3', '<br>🎉 E2E encryption test completed successfully!', 'success');
+        
+        testData.successTests++;
+      } catch (error) {
+        log('output3', `❌ Decryption failed: ${error.message}`, 'error');
+        testData.failedTests++;
+      }
+      
+      updateStats();
+    }
+    
+    // Test 4: Fingerprint
+    async function testFingerprint() {
+      clearOutput('output4');
+      testData.totalTests++;
+      
+      try {
+        log('output4', '🔄 Generating test keypair...');
+        
+        const keyPair = await window.SecureChatCrypto.generateRSAKeyPair();
+        const publicPem = await window.SecureChatCrypto.exportPublicKeyToPem(keyPair.publicKey);
+        
+        log('output4', '🔄 Computing SHA-256 fingerprint...');
+        
+        const fingerprint = await window.SecureChatCrypto.getPublicKeyFingerprint(publicPem);
+        
+        log('output4', '✅ Fingerprint generated!', 'success');
+        log('output4', `<div class="key-display">${fingerprint}</div>`);
+        log('output4', '💡 Users should verify this fingerprint out-of-band (phone, video, etc.)');
+        
+        testData.successTests++;
+      } catch (error) {
+        log('output4', `❌ Error: ${error.message}`, 'error');
+        testData.failedTests++;
+      }
+      
+      updateStats();
+    }
+    
+    // Test 5: Performance
+    async function testPerformance() {
+      clearOutput('output5');
+      log('output5', '🚀 Starting performance benchmark...');
+      
+      const iterations = 10;
+      
+      // RSA Generation
+      let rsaTotal = 0;
+      for (let i = 0; i < iterations; i++) {
+        const start = performance.now();
+        await window.SecureChatCrypto.generateRSAKeyPair();
+        rsaTotal += performance.now() - start;
+      }
+      const rsaAvg = (rsaTotal / iterations).toFixed(2);
+      log('output5', `🔑 RSA-2048 Generation: ${rsaAvg}ms avg (${iterations} iterations)`, 'success');
+      
+      // E2E Encryption
+      const keyPair = await window.SecureChatCrypto.generateRSAKeyPair();
+      const publicPem = await window.SecureChatCrypto.exportPublicKeyToPem(keyPair.publicKey);
+      
+      let encTotal = 0;
+      for (let i = 0; i < iterations; i++) {
+        const start = performance.now();
+        await window.SecureChatCrypto.encryptForRecipient(publicPem, 'Test message for benchmarking');
+        encTotal += performance.now() - start;
+      }
+      const encAvg = (encTotal / iterations).toFixed(2);
+      log('output5', `🔒 E2E Encryption: ${encAvg}ms avg (${iterations} iterations)`, 'success');
+      
+      // Summary
+      log('output5', '<br>📊 Summary:', 'info');
+      log('output5', `• RSA key generation is the slowest operation (~${rsaAvg}ms)`);
+      log('output5', `• E2E encryption is fast (~${encAvg}ms per message)`);
+      log('output5', `• AES encryption itself is < 1ms (most time is RSA key wrap)`);
+      log('output5', '<br>✅ Performance benchmark complete!', 'success');
+    }
+    
+    // Initialize
+    window.addEventListener('load', () => {
+      if (!window.SecureChatCrypto) {
+        alert('❌ Crypto module not loaded! Make sure crypto-module.js is in js/ folder.');
+      } else {
+        console.log('✅ Crypto module loaded successfully');
+      }
+    });
+  </script>
+</body>
+</html>

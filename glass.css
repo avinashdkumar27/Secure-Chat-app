@@ -1,0 +1,288 @@
+/* Professional Glassmorphism Enhancements */
+
+/* Auth Container Professional */
+.auth-container {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  padding: 2.5rem !important;
+  border-radius: 20px !important;
+}
+
+.auth-header h2 {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.auth-header p {
+  color: var(--text-gray) !important;
+  font-size: 1rem !important;
+}
+
+/* Key Generation Modal - Clean & Professional */
+.key-gen-modal {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(25px) !important;
+  border: 1px solid rgba(0, 217, 255, 0.2) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
+}
+
+.key-gen-animation {
+  font-size: 3.5rem;
+  color: var(--accent-cyan);
+  margin-bottom: 1rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.key-gen-subtitle {
+  color: var(--text-gray) !important;
+  font-size: 1rem !important;
+  margin-top: 0.5rem !important;
+  font-weight: 400 !important;
+}
+
+.key-item {
+  margin-bottom: 1.5rem !important;
+}
+
+.key-item label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  margin-bottom: 0.7rem !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  color: var(--text-light) !important;
+}
+
+.badge {
+  font-size: 0.65rem !important;
+  padding: 0.25rem 0.6rem !important;
+  border-radius: 12px !important;
+  background: rgba(0, 217, 255, 0.15) !important;
+  color: var(--accent-cyan) !important;
+  border: 1px solid rgba(0, 217, 255, 0.3) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 500 !important;
+}
+
+.badge.danger {
+  background: rgba(236, 72, 153, 0.15) !important;
+  color: var(--accent-pink) !important;
+  border-color: rgba(236, 72, 153, 0.3) !important;
+}
+
+/* Form Inputs - Clean Professional */
+.form-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.form-group i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(203, 213, 225, 0.5);
+  font-size: 1rem;
+  z-index: 2;
+}
+
+.form-group input {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 0.85rem 1rem 0.85rem 3rem !important;
+  color: var(--text-light) !important;
+  transition: all 0.3s ease !important;
+  border-radius: 10px !important;
+  width: 100% !important;
+}
+
+.form-group input:focus {
+  border-color: var(--accent-cyan) !important;
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.15) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  outline: none !important;
+}
+
+.form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Chat Bubbles - Subtle Professional */
+.message.sent .message-bubble {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.15), rgba(124, 58, 237, 0.15)) !important;
+  border: 1px solid rgba(0, 217, 255, 0.25) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.message.received .message-bubble {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Sidebar - Clean Professional */
+.sidebar {
+  background: rgba(255, 255, 255, 0.02) !important;
+  backdrop-filter: blur(20px) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.sidebar-header {
+  padding: 1.5rem !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.user-keys {
+  background: rgba(0, 0, 0, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  border-bottom: 1px solid rgba(0, 217, 255, 0.1) !important;
+  padding: 1.2rem 1.5rem !important;
+}
+
+.chat-item {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  transition: all 0.3s ease !important;
+  padding: 1rem !important;
+  border-radius: 12px !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.chat-item:hover {
+  background: rgba(0, 217, 255, 0.08) !important;
+  border-color: rgba(0, 217, 255, 0.3) !important;
+  transform: translateX(4px) !important;
+}
+
+.chat-item.active {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.15), rgba(124, 58, 237, 0.15)) !important;
+  border-color: var(--accent-cyan) !important;
+}
+
+/* Input Areas - Professional */
+.message-input-area {
+  background: rgba(255, 255, 255, 0.02) !important;
+  backdrop-filter: blur(20px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 1.5rem !important;
+}
+
+.message-input-area input {
+  background: rgba(0, 0, 0, 0.25) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+  color: var(--text-light) !important;
+  padding: 0.85rem 1.5rem !important;
+}
+
+.message-input-area input:focus {
+  border-color: var(--accent-cyan) !important;
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.2) !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Modals - Clean Professional */
+.profile-container,
+.about-container {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(25px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
+}
+
+.about-section {
+  background: rgba(0, 0, 0, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(0, 217, 255, 0.15) !important;
+  border-left: 3px solid var(--accent-cyan) !important;
+  padding: 1.5rem !important;
+  border-radius: 12px !important;
+  margin-bottom: 1.2rem !important;
+}
+
+.about-section:hover {
+  border-left-color: var(--accent-violet) !important;
+  transform: translateX(4px) !important;
+}
+
+/* Professional Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(0, 217, 255, 0.4), rgba(124, 58, 237, 0.4));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(0, 217, 255, 0.6), rgba(124, 58, 237, 0.6));
+}
+
+/* Remove excessive animations */
+* {
+  animation-duration: 0.5s !important;
+}
+
+/* Clean modal */
+.modal {
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(25px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Key warning box */
+.key-warning {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.3) !important;
+  border-left: 4px solid rgba(245, 158, 11, 0.8) !important;
+  padding: 1rem !important;
+  border-radius: 10px !important;
+  margin-top: 1.5rem !important;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.key-warning i {
+  color: rgba(245, 158, 11, 0.9);
+  font-size: 1.5rem;
+  margin-top: 0.2rem;
+}
+
+.key-warning p {
+  margin: 0;
+  color: var(--text-light) !important;
+  font-size: 0.9rem !important;
+}
+
+.key-warning ul {
+  margin: 0;
+  padding-left: 0.5rem;
+  list-style: none;
+  color: var(--text-gray) !important;
+}
